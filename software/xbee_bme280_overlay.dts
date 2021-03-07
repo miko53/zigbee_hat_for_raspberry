@@ -1,0 +1,51 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2708";
+
+	fragment@0 {
+		target = <&i2c_arm>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+		};
+	};
+	fragment@1 {
+		target = <&uart0>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart0_pins>;
+			status = "okay";
+		};
+	};
+	fragment@2 {
+		target = <&gpio>;
+		__overlay__ {
+			uart0_pins: uart0_pins {
+				brcm,pins = <14 15>;
+				brcm,function = <4>; /* alt0 */
+				brcm,pull = <0 2>;
+			};
+		};
+	};
+
+/*	fragment@3 {
+		target-path = "/aliases";
+		__overlay__ {
+			serial0 = "/soc/serial@7e201000";
+			serial1 = "/soc/serial@7e215040";
+		};
+	}; */
+
+	__overrides__ {
+		txd0_pin = <&uart0_pins>,"brcm,pins:0";
+		rxd0_pin = <&uart0_pins>,"brcm,pins:4";
+		//rts0_pin = <&uart0_pins>,"brcm,pins:8";
+		//cts0_pin = <&uart0_pins>,"brcm,pins:12";
+		pin_func = <&uart0_pins>,"brcm,function:0";
+	};
+
+};
+
